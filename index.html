@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Teacher Dash</title>
+<link rel="icon" href="logo.png" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg:#0b0f14;
+  --panel:#0f141b;
+  --muted:#8aa0a7;
+  --text:#e8f1f2;
+  --accent:#00e676;
+  --accent-2:#1aff9c;
+  --accent-3:#00c853;
+  --help-bg:#11110a;
+  --help-glow:#ffd54f;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, #0d131a 0%, var(--bg) 50%, #080c11 100%),
+    linear-gradient(180deg, rgba(0,230,118,0.12), rgba(0,230,118,0.0) 40%, rgba(0,230,118,0.08) 100%);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:saturate(1.2) blur(10px);
+  background:linear-gradient(180deg, rgba(17,24,33,0.9), rgba(17,24,33,0.6));
+  border-bottom:1px solid rgba(0,230,118,0.18);
+}
+.header-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:grid;place-items:center;
+  background:radial-gradient(circle at 30% 30%, #1b2530, #10161d);
+  outline:2px solid rgba(255,255,255,0.06);
+  box-shadow:0 2px 20px rgba(0,230,118,0.08) inset;
+  animation:float 6s ease-in-out infinite;
+}
+.avatar svg{width:24px;height:24px;fill:#a6b2bd}
+.welcome{
+  font-weight:600;
+  letter-spacing:0.2px;
+}
+.welcome .name{color:var(--accent)}
+
+.h1-wrap{
+  max-width:1200px;margin:24px auto 8px; padding:0 20px;
+}
+h1{
+  margin:0;
+  font-size:clamp(24px, 4vw, 36px);
+  font-weight:800;
+  letter-spacing:0.3px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 8px rgba(0,230,118,0.18));
+  animation:headline 900ms ease both;
+}
+
+.main{
+  max-width:1200px;
+  margin:12px auto 100px;
+  padding:10px 20px 40px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:24px;
+  justify-items:center;
+  align-items:center;
+  padding:20px 0;
+  animation:fadeUp 700ms 120ms ease both;
+}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:400px){.grid{grid-template-columns:1fr}}
+
+.card{
+  width:132px;height:132px;border-radius:50%;
+  position:relative; isolation:isolate;
+  background:radial-gradient(120% 120% at 30% 20%, #0c1218 0%, #0a1016 60%, #070c12 100%);
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.45),
+    0 0 0 6px rgba(0,230,118,0.06) inset;
+  cursor:pointer;
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background:conic-gradient(from 180deg, rgba(0,230,118,0.0), rgba(0,230,118,0.15), rgba(0,230,118,0.0));
+  filter:blur(8px); opacity:0; transition:opacity 280ms ease;
+}
+.card:hover{
+  transform:translateY(-4px) scale(1.02);
+  border-color:rgba(0,230,118,0.28);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.55),
+    0 0 0 10px rgba(0,230,118,0.10) inset;
+}
+.card:hover::before{opacity:1}
+.card:active{transform:translateY(0) scale(0.99)}
+.card-content{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+}
+.icon-wrap{
+  width:58px;height:58px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #12202a, #0b141b);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 6px 14px rgba(0,0,0,0.4) inset;
+  display:grid;place-items:center;
+  transition:transform 220ms ease, filter 220ms ease;
+}
+.card:hover .icon-wrap{
+  transform:scale(1.06);
+  filter:drop-shadow(0 0 6px rgba(0,230,118,0.35));
+}
+.icon{
+  width:32px;height:32px; fill:var(--accent);
+  filter:drop-shadow(0 0 4px rgba(0,230,118,0.35));
+}
+.card-label{
+  position:absolute; bottom:12px; left:0; right:0;
+  text-align:center; font-size:13px; color:var(--muted);
+  letter-spacing:0.2px;
+}
+
+.footer-space{height:80px}
+
+.help{
+  position:fixed; right:20px; bottom:20px; z-index:20;
+  display:flex; align-items:center; gap:10px;
+}
+.help-btn{
+  width:58px;height:58px;border-radius:18px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:
+    radial-gradient(120% 120% at 20% 20%, var(--help-bg), #0e0e08),
+    linear-gradient(180deg, rgba(255,213,79,0.05), rgba(255,213,79,0.03));
+  box-shadow:
+    0 0 22px 10px rgba(255,213,79,0.2),
+    0 0 40px 20px rgba(255,213,79,0.14),
+    inset 0 0 24px rgba(255,213,79,0.28);
+  color:#ffecb3;
+  display:grid; place-items:center; cursor:pointer;
+  transition:transform 180ms ease, box-shadow 220ms ease;
+  animation:superGlow 2.2s ease-in-out infinite;
+}
+.help-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 0 28px 14px rgba(255,213,79,0.28),
+    0 0 60px 28px rgba(255,213,79,0.18),
+    inset 0 0 32px rgba(255,213,79,0.36);
+}
+.help-icon{
+  width:28px;height:28px; fill:#ffea00;
+  filter:drop-shadow(0 0 6px rgba(255,234,0,0.4))
+}
+.help-tip{
+  position:relative;
+  color:#141208;
+  background:#ffe97a;
+  border:1px solid #ffe162;
+  border-radius:16px;
+  padding:8px 12px;
+  font-size:13px; font-weight:600;
+  box-shadow:0 6px 18px rgba(255,213,79,0.45);
+  transform:translateY(8px);
+  opacity:0;
+  animation:tipPop 600ms 400ms cubic-bezier(.2,.8,.2,1) both,
+           tipPulse 1600ms 1200ms ease-in-out infinite;
+}
+.help-tip::after{
+  content:"";
+  position:absolute; right:-6px; top:50%; transform:translateY(-50%);
+  width:0;height:0;border-left:8px solid #ffe97a;border-top:8px solid transparent;border-bottom:8px solid transparent;
+  filter:drop-shadow(1px 0 0 #ffe162);
+}
+
+.modal-backdrop{
+  position:fixed; inset:0; display:none;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(6px);
+  animation:fade 220ms ease both;
+}
+.modal{
+  position:fixed; inset:0; display:none;
+  align-items:center; justify-content:center; z-index:50;
+}
+.modal-card{
+  width:min(680px, 92vw);
+  background:linear-gradient(180deg, rgba(16,22,30,0.85), rgba(12,18,24,0.9));
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.65), 0 0 0 10px rgba(0,230,118,0.06) inset;
+  color:var(--text);
+  animation:scaleIn 320ms cubic-bezier(.2,.8,.2,1) both;
+}
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 20px; border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.modal-title{font-weight:800; letter-spacing:0.3px}
+.modal-close{
+  background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer; padding:6px;
+  transition:transform 160ms ease, color 160ms ease;
+}
+.modal-close:hover{transform:scale(1.06); color:var(--accent)}
+.modal-body{padding:18px 20px; display:grid; gap:14px}
+.modal-actions{
+  display:flex; justify-content:flex-end; gap:10px; padding:0 20px 18px;
+}
+
+.input{
+  width:100%;
+  padding:12px 14px; border-radius:12px;
+  background:#0e141a; color:var(--text);
+  border:1px solid rgba(255,255,255,0.08);
+  outline:none;
+  transition:border-color 180ms ease, box-shadow 180ms ease;
+}
+.input:focus{
+  border-color:rgba(0,230,118,0.38);
+  box-shadow:0 0 0 6px rgba(0,230,118,0.10);
+}
+.btn{
+  padding:10px 16px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:linear-gradient(180deg, #0f171d, #0b1318);
+  color:var(--text); font-weight:600; cursor:pointer;
+  transition:transform 180ms ease, box-shadow 220ms ease, border-color 180ms ease, color 180ms ease;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(0,230,118,0.36);
+  box-shadow:0 10px 24px rgba(0,0,0,0.4), 0 0 0 8px rgba(0,230,118,0.10);
+}
+.btn.primary{
+  background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  color:#06210f; border-color:rgba(0,230,118,0.5);
+  text-shadow:0 1px 0 rgba(255,255,255,0.3);
+}
+.btn.primary:hover{
+  box-shadow:0 12px 30px rgba(0,230,118,0.25);
+}
+
+
+.help-content{display:grid; gap:8px}
+.help-step{
+  display:flex; align-items:flex-start; gap:12px; padding:8px 0;
+}
+.help-step-bullet{
+  width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #13221f, #0d1714);
+  border:1px solid rgba(255,255,255,0.08);
+  display:grid;place-items:center;
+}
+.help-step-bullet svg{width:14px;height:14px; fill:var(--accent)}
+.help-step-text{color:#b8c6cc}
+
+@keyframes fadeUp{
+  from{transform:translateY(10px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+@keyframes headline{
+  0%{opacity:0; transform:translateY(8px) scale(0.98)}
+  100%{opacity:1; transform:translateY(0) scale(1)}
+}
+@keyframes scaleIn{
+  0%{opacity:0; transform:translateY(10px) scale(0.96)}
+  100%{opacity:1; transform:translateY(0) scale(1)}
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+@keyframes fade{from{opacity:0} to{opacity:1}}
+@keyframes tipPop{
+  0%{opacity:0; transform:translateY(12px) scale(0.96)}
+  100%{opacity:1; transform:translateY(0) scale(1)}
+}
+@keyframes tipPulse{
+  0%,100%{transform:translateY(0); box-shadow:0 6px 18px rgba(255,213,79,0.45)}
+  50%{transform:translateY(-2px); box-shadow:0 10px 26px rgba(255,213,79,0.58)}
+}
+@keyframes superGlow{
+  0%,100%{
+    box-shadow:
+      0 0 22px 10px rgba(255,213,79,0.2),
+      0 0 40px 20px rgba(255,213,79,0.14),
+      inset 0 0 24px rgba(255,213,79,0.28)
+  }
+  50%{
+    box-shadow:
+      0 0 30px 14px rgba(255,213,79,0.28),
+      0 0 70px 28px rgba(255,213,79,0.2),
+      inset 0 0 32px rgba(255,213,79,0.36)
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+
+<header class="header">
+  <div class="header-inner">
+    <div class="avatar" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-4.418 0-8 2.239-8 5v2h16v-2c0-2.761-3.582-5-8-5z"/>
+      </svg>
+    </div>
+    <div class="welcome">
+      Welcome back, <span class="name">Teacher</span>
+    </div>
+  </div>
+</header>
+
+
+<div class="h1-wrap">
+  <h1>Teacher Dash</h1>
+</div>
+
+
+<main class="main">
+
+  <section class="grid" aria-label="Quick actions">
+
+
+    <button class="card" data-type="classroom">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://static.vecteezy.com/system/resources/previews/017/395/362/non_2x/google-classroom-icon-free-png.png"/>
+        </div>
+        <div class="card-label">Classroom</div>
+      </div>
+    </button>
+
+
+    <button class="card" data-type="drive">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://www.pngall.com/wp-content/uploads/9/Google-Drive-Logo-PNG-Picture.png"/>
+        </div>
+        <div class="card-label">Drive</div>
+      </div>
+    </button>
+
+
+    <button class="card" data-type="ai">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://cdn.freebiesupply.com/logos/large/2x/ai-logo-png-transparent.png"/>
+        </div>
+        <div class="card-label">Assistant</div>
+      </div>
+    </button>
+
+
+    <button class="card" data-type="gmail">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://static.vecteezy.com/system/resources/previews/022/484/508/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png"/>
+        </div>
+        <div class="card-label">Email</div>
+      </div>
+    </button>
+
+  
+    <button class="card" data-url="indexspr.html">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://icons.veryicon.com/png/o/miscellaneous/icon-pack/graduation-hat-3.png"/>
+        </div>
+        <div class="card-label">Student Report</div>
+      </div>
+    </button>
+
+   
+    <button class="card" data-url="https://chromedino.com/">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://cdn.pixabay.com/photo/2016/12/23/07/00/game-1926906_640.png"/>
+        </div>
+        <div class="card-label">Relax</div>
+      </div>
+    </button>
+
+  
+    <button class="card" data-url="indextodo.html">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://www.freeiconspng.com/thumbs/check-tick-icon/tick-icon-30.png"/>
+        </div>
+        <div class="card-label">To Do</div>
+      </div>
+    </button>
+
+ 
+    <button class="card" data-url="indexnotes.html">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://www.pngplay.com/wp-content/uploads/7/Note-Logo-Transparent-Background.png"/>
+        </div>
+        <div class="card-label">Notes</div>
+      </div>
+    </button>
+
+
+    <button class="card" data-url="indexbook.html">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://brandslogos.com/wp-content/uploads/images/large/ebook-logo.png"/>
+        </div>
+        <div class="card-label">E-Books</div>
+      </div>
+    </button>
+
+  
+    <button class="card" data-url="indextt.html">
+      <div class="card-content">
+        <div class="icon-wrap">
+          <img class="icon" src="https://cdn3.iconfinder.com/data/icons/logistics-delivery-14/64/schedule-calendar-time-clock-timetable-1024.png"/>
+        </div>
+        <div class="card-label">TimeTable</div>
+      </div>
+    </button>
+
+  </section>
+
+  <div class="footer-space"></div>
+</main>
+
+
+<div class="help">
+  <div class="help-tip">Click here for help</div>
+  <button class="help-btn">
+    <svg class="help-icon" viewBox="0 0 24 24">
+      <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm1.07-7.75c-.9.23-1.57.9-1.78 1.77-.07.32-.35.54-.68.54h-.06c-.44 0-.78-.37-.72-.81.29-1.73 1.63-3.07 3.36-3.36 1.32-.22 2.59.21 3.47 1.08.65.65 1.05 1.5 1.13 2.41.06.73-.55 1.32-1.28 1.32h-.07c-.62 0-1.12-.48-1.18-1.1-.04-.42-.22-.82-.52-1.12-.47-.47-1.16-.68-1.87-.47z"/>
+    </svg>
+  </button>
+</div>
+
+
+<div class="modal-backdrop" id="backdrop"></div>
+
+
+<div class="modal" id="helpModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">How to use this website</div>
+      <button class="modal-close" id="helpClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="help-content">
+        <div class="help-step">
+          <div class="help-step-bullet">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17l-3.59-3.59L4 14l5 5 12-12-1.41-1.41z"/></svg>
+          </div>
+          <div class="help-step-text">Click any round button to open a webpage.</div>
+        </div>
+
+        <div class="help-step">
+          <div class="help-step-bullet">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17l-3.59-3.59L4 14l5 5 12-12-1.41-1.41z"/></svg>
+          </div>
+          <div class="help-step-text">Use your browser's BACK button to return here.</div>
+        </div>
+
+        <div class="help-step">
+          <div class="help-step-bullet">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17l-3.59-3.59L4 14l5 5 12-12-1.41-1.41z"/></svg>
+          </div>
+          <div class="help-step-text">This dashboard uses external websites.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="helpGotIt">Got it</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="infoModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Your Info</div>
+      <button class="modal-close" id="infoClose">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <input class="input" id="nameInput" type="text" placeholder="Enter your name"/>
+      <input class="input" id="emailInput" type="email" placeholder="Enter your email"/>
+      <input class="input" id="phoneInput" type="tel" placeholder="Enter your phone number"/>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="infoSkip">Skip</button>
+      <button class="btn primary" id="infoSave">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+const nameKey="teacher_name_v1";
+const emailKey="teacher_email_v1";
+const phoneKey="teacher_phone_v1";
+
+const greetingEl=document.querySelector(".welcome .name");
+const infoModal=document.getElementById("infoModal");
+const backdrop=document.getElementById("backdrop");
+
+const nameInput=document.getElementById("nameInput");
+const emailInput=document.getElementById("emailInput");
+const phoneInput=document.getElementById("phoneInput");
+
+const infoSave=document.getElementById("infoSave");
+const infoSkip=document.getElementById("infoSkip");
+const infoClose=document.getElementById("infoClose");
+
+const helpModal=document.getElementById("helpModal");
+const helpClose=document.getElementById("helpClose");
+const helpGotIt=document.getElementById("helpGotIt");
+
+const helpBtn=document.querySelector(".help-btn");
+const helpTip=document.querySelector(".help-tip");
+
+
+document.querySelectorAll(".card").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const type=b.getAttribute("data-type");
+    const url=b.getAttribute("data-url");
+
+    const email=localStorage.getItem(emailKey) || "";
+
+    if(type==="classroom"){
+      window.location.href="https://classroom.google.com/u/0/?authuser="+encodeURIComponent(email);
+      return;
+    }
+    if(type==="drive"){
+      window.location.href="https://drive.google.com/drive/u/0/?authuser="+encodeURIComponent(email);
+      return;
+    }
+    if(type==="gmail"){
+      window.location.href="https://mail.google.com/mail/u/0/?authuser="+encodeURIComponent(email);
+      return;
+    }
+    if(type==="ai"){
+      window.location.href="https://www.copilot.com/?email="+encodeURIComponent(email);
+      return;
+    }
+
+    if(url){
+      window.location.href=url;
+    }
+  });
+});
+
+
+function openModal(el){
+  backdrop.style.display="block";
+  el.style.display="flex";
+}
+function closeModal(el){
+  backdrop.style.display="none";
+  el.style.display="none";
+}
+
+
+helpBtn.addEventListener("click",()=>openModal(helpModal));
+helpClose.addEventListener("click",()=>closeModal(helpModal));
+helpGotIt.addEventListener("click",()=>closeModal(helpModal));
+
+
+function initInfo(){
+  const n=localStorage.getItem(nameKey);
+  const e=localStorage.getItem(emailKey);
+  const p=localStorage.getItem(phoneKey);
+
+  if(n && n.trim().length>0){
+    greetingEl.textContent=n;
+  } else {
+    openModal(infoModal);
+    setTimeout(()=>{nameInput.focus()},200);
+  }
+
+  if(n) nameInput.value=n;
+  if(e) emailInput.value=e;
+  if(p) phoneInput.value=p;
+}
+
+
+infoSave.addEventListener("click",()=>{
+  const n=(nameInput.value||"").trim();
+  const e=(emailInput.value||"").trim();
+  const p=(phoneInput.value||"").trim();
+
+  if(n.length>0){
+    localStorage.setItem(nameKey,n);
+    greetingEl.textContent=n;
+  }
+  if(e.length>0){
+    localStorage.setItem(emailKey,e);
+  }
+  if(p.length>0){
+    localStorage.setItem(phoneKey,p);
+  }
+
+  closeModal(infoModal);
+});
+
+
+infoSkip.addEventListener("click",()=>closeModal(infoModal));
+infoClose.addEventListener("click",()=>closeModal(infoModal));
+
+function showTip(){
+  helpTip.style.opacity="1";
+  helpTip.style.transform="translateY(0)";
+  setTimeout(()=>{
+    helpTip.style.opacity="0";
+    helpTip.style.transform="translateY(8px)";
+  },3500);
+}
+
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"){showTip()}
+});
+
+window.addEventListener("load",()=>{
+  initInfo();
+  showTip();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Custom Timetable</title>
+<link rel="icon" href="logo.png" type="image/x-icon">
+<style>
+body{background:#111;color:#0f0;font-family:sans-serif;margin:0;padding:20px}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #0f0;padding:10px;text-align:center}
+input{background:#222;color:#0f0;border:1px solid #0f0;width:100%;text-align:center}
+</style>
+</head>
+<body>
+<h2>Weekly Timetable</h2>
+<table id="t">
+<thead><tr><th>Day</th><th>Class 1</th><th>Break</th><th>Class 2</th><th>Class 3</th><th>Class 4</th><th>Class 5</th><th>Lunch</th><th>Class 6</th><th>Class 7</th><th>Class 8</th></tr></thead>
+<tbody></tbody>
+</table>
+<script>
+let days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+let t=document.querySelector("#t tbody");
+days.forEach((d,i)=>{let r=document.createElement("tr");r.innerHTML="<td>"+d+"</td>"+Array(10).fill().map((_,j)=>"<td><input id='"+i+"-"+j+"'></td>").join("");t.appendChild(r)});
+document.querySelectorAll("input").forEach(inp=>{
+  inp.value=localStorage.getItem(inp.id)||"";
+  inp.oninput=()=>localStorage.setItem(inp.id,inp.value);
+});
+</script>
+</body>
+</html>

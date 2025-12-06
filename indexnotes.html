@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notes</title>
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e1e1e;
+      border-bottom: 3px solid #00ff66;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      color: #00ff66;
+      margin: 0;
+      font-size: 2em;
+    }
+
+    textarea {
+      width: 100%;
+      height: calc(100vh - 80px);
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      border: 2px solid #00ff66;
+      padding: 15px;
+      font-size: 1em;
+      resize: none;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #00cc55;
+      box-shadow: 0 0 10px #00ff66;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Take Notes!</h1>
+  </header>
+  <textarea id="notes" placeholder="Write your notes here..."></textarea>
+
+  <script>
+    const notesArea = document.getElementById('notes');
+
+    // It Better Load If Not Then... I WILL DESTROY EDGE!!!
+    notesArea.value = localStorage.getItem('savedNotes') || '';
+
+
+    notesArea.addEventListener('input', () => {
+      localStorage.setItem('savedNotes', notesArea.value);
+    });
+  </script>
+</body>
+</html>
